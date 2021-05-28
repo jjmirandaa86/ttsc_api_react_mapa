@@ -1,0 +1,6 @@
+RewriteEngine On 
+
+RewriteRule ^usuarios$ index.php [NC,L]
+RewriteRule ^usuarios/all$ index.php [NC,L]
+RewriteRule ^usuarios/id/([0-9]+)$ index.php [NC,L]
+

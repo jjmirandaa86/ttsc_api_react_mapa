@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+    #Comprimir archivos antes de ser mostrados.
+    #AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/x-javascript
+    RewriteEngine on
+
+    #************************
+    #******** Usuario *******
+    RewriteRule ^usuarios/all$ Usuario.php [NC,L]
+    RewriteRule ^usuarios/id/([0-9]+)$ Usuario.php [NC,L]
+    RewriteRule ^usuarios/correo/(\w+[/./-]?){1,}@[a-z]+[/.]\w{2,}$ Usuario.php [NC,L]
+    RewriteRule ^usuarios/validate$ Usuario.php [NC,L]
+    RewriteRule ^usuarios/crea$ Usuario.php [NC,L]
+
+    
+    #RewriteRule     ^usuarios/put/([0-9]+)$                                 Usuario.php [NC,L]   #******** actualiza el usuario
+    #RewriteRule     ^usuarios/del/([0-9]+)$                                 Usuario.php [NC,L]   #******** elimina el usuario
+    
+
+    #negar lectura de acchivo desde la web
+    #order allow, deny
+    #deny from all
+</IfModule>
+
