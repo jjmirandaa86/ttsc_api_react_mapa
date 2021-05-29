@@ -1,3 +1,6 @@
 {
-  "recommendations": ["tht13.html-preview-vscode"]
+  "recommendations": [
+    "tht13.html-preview-vscode",
+    "formulahendry.auto-close-tag"
+  ]
 }

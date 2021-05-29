@@ -2,6 +2,7 @@
 
     include_once '../Dao/UsuarioDao.php';
     include_once '../Class/Usuario.php';
+    include_once '../Config/Utilidades.php';
 
     Class UsuarioBo{
         private $userDao = null; //Class
@@ -34,14 +35,11 @@
                     break;
 
                 case "usuarios/crea/post": //Cuando creo un nuevo usuario
-                    $datos = $this->userDao->creaUsuario($dato);                    
+                    $datos = $this->userDao->creaUsuario($dato);
                     break;
 
-                case "usuarios/put/put": // Cuando modifico un dato del usuario
-                    $userClass = new Usuario();
-                    $userClass->setIdUsuario(500857); //Obligado llevar
-                    $userClass->setNombre("Jefferson Javier"); //Campos a modificar
-                    $datos = $this->userDao->modificaUsuario($userClass);
+                case "usuarios/modifica/put": // Cuando modifico un dato del usuario
+                    $datos = $this->userDao->modificaUsuario($dato);
                     break;
                 
                 case "usuarios/del/del": // Elimino un usuario de la BD
@@ -49,18 +47,13 @@
                     break;
 
                 default:
-                    $codigoHttp = 404;
-                    http_response_code($codigoHttp);
-                    echo json_encode(
-                        array(  
-                            "Clase" => "", 
-                            "Cantidad" => 0,
-                            "mensaje" => "Metodo no implementado.",
-                            "codigoHttp" => $codigoHttp,
-                            "mensajeHttp" => codigoErrorHttp($codigoHttp),
-                            "registros" => []
-                        )
-                    );
+                    echo json_encode( seteaMensaje(
+                        "Error, no existe el metodo buscado",
+                        0,
+                        "Metodo no implementado.",
+                        404,
+                        []
+                    ));
                     break;
             }
         }

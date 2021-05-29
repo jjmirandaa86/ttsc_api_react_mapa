@@ -1,5 +1,5 @@
 <?php
-    include_once '../Config/database.php';
+    include_once '../Config/Database.php';
     include_once '../Class/Usuario.php';
     include_once '../Config/Utilidades.php';
     include_once '../Config/Contrasena.php';
@@ -248,8 +248,7 @@
         }
 
         //****************************
-        // Almacena un nuevo usuario FALLLLLLTAAAAAAAAAAAAA
-        // $contrasenaHash = $this->classContrasena->hash($clave);
+        // Almacena un nuevo usuario
         // Solo debe existir un correo por persona 
         public function creaUsuario($dato = []){
             //Recupero y valido si los campos estan llenos
@@ -334,27 +333,89 @@
 
         //****************************
         // Modifica un los datos de un usuario FALLLLLLTAAAAAAAAAAAAA
-        public function modificaUsuario($objeto){
-            if( !empty($objeto->getIdUsuario()) ){
-                $usuarioDao = new UsuarioDao();
-                $arrayDatoBuscado = $usuarioDao->getUsuarioIdUsuario($objeto->getIdUsuario());
-                $usuarioDao = null;
-                echo "Falta implementar";
+        public function modificaUsuario($dato = []){
+            //Recupero y valido si los campos estan llenos
+            $errorDatos = false;
+            if(empty(trim($dato["idUsuario"])))
+                $errorDatos = true;
+            if(empty(trim($dato["nombre"])))
+                $errorDatos = true;
+            if(empty(trim($dato["apellido"])))
+                $errorDatos = true;
+            if(empty(trim($dato["contrasena"])))
+                $errorDatos = true;
+            if(empty(trim($dato["correo"])))
+                $errorDatos = true;
+
+            $userClass = 
+            new Usuario(
+                    trim($dato["idUsuario"]), 
+                    trim($dato["nombre"]), 
+                    trim($dato["apellido"]), 
+                    $this->classContrasena->hash(trim($dato["contrasena"])), 
+                    trim($dato["correo"]), 
+                    "A");
+            if(!$errorDatos){
+                $query = "Update " . $this->usuario->getDbTable();
+                $query = $query . " set ";
+                $query = $query . " nombre = :nombre, ";
+                $query = $query . " apellido = :apellido, ";
+                $query = $query . " contrasena = :contrasena, ";
+                $query = $query . " correo = :correo, ";
+                $query = $query . " estado = :estado ";
+                $query = $query . " Where idUsuario = :idUsuario ";
                 
-            }else{
-                //RESPUESTA - DATOS INCOMPLETOS
-                $codigoHttp = 400;
-                http_response_code($codigoHttp);
-                echo json_encode(
-                    array(  "Clase" => $objeto->getDbTable(), 
-                            "Cantidad" => 0,
-                            "mensaje" => "Datos enviados incompletos, se requiere un codigo para: " . $objeto->getDbTable(),
-                            "codigo" => 0,
-                            "codigoHttp" => $codigoHttp,
-                            "mensajeHttp" => codigoErrorHttp($codigoHttp))
-                );
-                return false;
-            }        
+                $stmt = $this->conn->prepare($query);
+                $stmt->bindValue(":nombre", $userClass->getNombre());
+                $stmt->bindValue(":apellido", $userClass->getApellido());
+                $stmt->bindValue(":contrasena", $userClass->getContrasena());
+                $stmt->bindValue(":correo", $userClass->getCorreo());
+                $stmt->bindValue(":estado", $userClass->getEstado());
+                $stmt->bindValue(":idUsuario", $userClass->getIdUsuario());
+
+                try{
+                    if($stmt->execute()){
+                        //RESPUESTA - CREACION CON EXITO
+                        echo json_encode( seteaMensaje(
+                            $this->usuario->getDbTable(),
+                            1,
+                            "Modificación ejecutada.",
+                            201,
+                            []
+                        ));
+                        return true;
+                    }else{
+                        //RESPUESTA - ERROR AL EJECUTAR LA CONSULTA
+                        echo json_encode( seteaMensaje(
+                            $this->usuario->getDbTable(),
+                            0,
+                            "Modificación no ejecutada.",
+                            503,
+                            []
+                        ));
+                        return false;
+                    }
+                }catch(PDOException $exception){
+                    //RESPUESTA - ERROR CAPTURADO EN EXCEPCION
+                    echo json_encode( seteaMensaje(
+                        $this->usuario->getDbTable(),
+                        0,
+                        $exception->getMessage(),
+                        422,
+                        []
+                    ));
+                    return false;
+                }
+            }else
+            {
+                echo json_encode( seteaMensaje(
+                    $this->usuario->getDbTable(),
+                    0,
+                    "Error faltan datos para procesar la información.",
+                    404,
+                    []
+                ));
+            }
         }
 
         //****************************+

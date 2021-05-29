@@ -12,21 +12,6 @@
         return $datosDevueltos;
     }
 
-    /*
-    //****************************************** 
-    //para encriptar contraseñas
-    function hash($password) {
-        return password_hash($password, PASSWORD_DEFAULT);
-    }
-
-    //****************************************** 
-    //para desencriptar contraseñas
-    function verify($password, $hash) {
-        //echo $password . "    \n";
-        //echo $hash . "    \n";
-        return password_verify($password, $hash);
-    }
-    */
     //****************************************** 
     //Obtener el codigo de error de la pagina Http
     function codigoErrorHttp($code = null){
@@ -128,8 +113,23 @@
         return $respuesta;
     }
 
-    function eliminaCaracteresEspeciales($dato){
-        return htmlspecialchars(strip_tags($dato));
+    function devuelveTipoPeticion(){ //GET | POST | PUT | DELETE
+        return strtolower($_SERVER['REQUEST_METHOD']);
+    }
+
+    function devuelveUrlServidor(){ // localhost:8888
+        return strtolower($_SERVER['HTTP_HOST']);
+    }
+
+    function devuelvePaginaSolicitada(){ //   /reactmapa/api/usuario.php
+        return strtolower($_SERVER['REQUEST_URI']); 
+    }
+
+    function devuelveDatoUrl($urlPage){
+        $urlPageArray = explode("/", $urlPage);
+        $entidad = $urlPageArray[3];
+        $metodo = $urlPageArray[4];
+        $dato = $urlPageArray[5];
+        return [$entidad, $metodo, $dato];
     }
 ?>
-

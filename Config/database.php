@@ -1,5 +1,5 @@
 <?php 
-    include_once 'core.php';
+    include_once 'Core.php';
     
     class Database {
         public $conn;
