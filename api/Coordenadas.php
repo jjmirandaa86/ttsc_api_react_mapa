@@ -13,20 +13,22 @@
     $entidad = "";
     $metodo = "";
     $dato = "";
+    $parametroUrl = ""; 
+    $parametroUrlDato = "";
     $userBo = null;
 
     //Obtengo URL de la petición
     $metodoServidor = devuelveTipoPeticion();   //   GET | POST | DEL | PUT
     $urlPage = devuelvePaginaSolicitada();      //   /reactmapa/api/usuario.php
+    [$entidad, $metodo, $dato, $parametroUrl, $parametroUrlDato] = devuelveDatoUrl($urlPage);
+    devuelvePaginaSolicitadaSinDatosGet();
     
-    [$entidad, $metodo, $dato] = devuelveDatoUrl($urlPage);
-
     if(!empty($entidad) && !empty($metodo)){
         $coordenadasBo = new CoordenadasBo();
         switch($metodoServidor)
         {
             case "get": 
-                $datos = $coordenadasBo->consultaBo($entidad, $metodo, $dato, $metodoServidor);
+                $datos = $coordenadasBo->consultaBo($entidad, $metodo, $dato, $metodoServidor, $parametroUrl, $parametroUrlDato);
                 break;
             case "post": 
                 $json = file_get_contents('php://input'); // takes raw data from the request 

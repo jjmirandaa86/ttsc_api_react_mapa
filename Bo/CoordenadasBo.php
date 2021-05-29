@@ -14,8 +14,9 @@
         }
 
         //Derivo al metodo correspondiente
-        function consultaBo($entidad = "", $metodo = "", $dato = "", $metodoServidor = ""){
+        function consultaBo($entidad = "", $metodo = "", $dato = "", $metodoServidor = "", $parametroUrl = "", $parametroUrlDato = 0 ){
             $accesoMetodo = $entidad . "/" . $metodo . "/" . $metodoServidor;
+            
             switch($accesoMetodo)
             {
                 case "coordenadas/all/get": //Recupera todos los coordenadas
@@ -23,7 +24,12 @@
                     break;
 
                 case "coordenadas/ruta/get": //Recupera las coordenadas por ruta 
-                    $datos = $this->coordenadasDao->getCoordenadasRuta($dato);
+                    if ($parametroUrlDato === 0){
+                        $datos = $this->coordenadasDao->getCoordenadasRuta($dato);
+                    }
+                    else{ 
+                        $datos = $this->coordenadasDao->getCoordenadasRuta($dato, $parametroUrlDato);
+                    }
                     break;
 
                 case "coordenadas/fecha/post": //recupero los datos por fecha inicio y fin

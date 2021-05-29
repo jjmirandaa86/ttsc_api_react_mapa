@@ -101,10 +101,12 @@
     }
 
 
-    function seteaMensaje($clase, $cantidad, $mensaje, $codigoHttp, $registros){
+    function seteaMensaje($clase, $cantidad, $urlNext, $urlPrevios, $mensaje, $codigoHttp, $registros){
         $respuesta = array(  
             "Clase" => $clase, 
             "Cantidad" => $cantidad,
+            "urlSiguiente" => $urlNext,
+            "urlAnterior" => $urlPrevios,
             "mensaje" => $mensaje,
             "codigoHttp" => $codigoHttp,
             "mensajeHttp" => codigoErrorHttp($codigoHttp),
@@ -125,11 +127,36 @@
         return strtolower($_SERVER['REQUEST_URI']); 
     }
 
+    function devuelvePaginaSolicitadaSinDatosGet(){ //   /reactmapa/api/usuario.php?offset=20
+        $dato = strtolower($_SERVER['REQUEST_URI']); //   /reactmapa/api/usuario.php
+        $dato = substr($dato, 0,strpos($dato, "?"));
+        return $dato; 
+    }
+
     function devuelveDatoUrl($urlPage){
+        
         $urlPageArray = explode("/", $urlPage);
         $entidad = $urlPageArray[3];
+        //echo $entidad . "\n";
         $metodo = $urlPageArray[4];
+        //echo $metodo . "\n";
+        
         $dato = $urlPageArray[5];
-        return [$entidad, $metodo, $dato];
+        $parametroUrlDato = 0;
+        if(strpos($dato, "=")>0){
+            $parametroUrlDato = intval(substr($dato, strpos($dato, "=")+1, 100));
+            $dato = substr($dato, 0, strpos($dato, "="));
+        }
+        //echo $parametroUrlDato . "\n";
+        $parametroUrl = "";
+        if(strpos($dato, "?")>0){
+            $parametroUrl = substr($dato, strpos($dato, "?")+1, 100);
+            $dato = substr($dato, 0, strpos($dato, "?"));
+        }
+        //echo $parametroUrl . "\n";
+        //echo $dato;
+        
+        return [$entidad, $metodo, $dato, $parametroUrl, $parametroUrlDato];
+        
     }
 ?>

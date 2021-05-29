@@ -55,6 +55,8 @@
                 echo json_encode( seteaMensaje(
                     $this->usuario->getDbTable(),
                     $num,
+                    "",
+                    "",
                     "Registros Encontrados.",
                     200,
                     $datosArray
@@ -63,6 +65,8 @@
                 echo json_encode( seteaMensaje(
                     $this->usuario->getDbTable(),
                     $num,
+                    "",
+                    "",
                     "No se encontraron registros.",
                     404,
                     []
@@ -98,6 +102,8 @@
                     echo json_encode( seteaMensaje(
                         $this->usuario->getDbTable(),
                         $num,
+                        "",
+                        "",
                         "Registros Encontrados.",
                         200,
                         $datosArray
@@ -106,6 +112,8 @@
                     echo json_encode( seteaMensaje(
                         $this->usuario->getDbTable(),
                         $num,
+                        "",
+                        "",
                         "No se encontraron registros.",
                         404,
                         []
@@ -116,6 +124,8 @@
                 echo json_encode( seteaMensaje(
                     $this->usuario->getDbTable(),
                     0,
+                    "",
+                    "",
                     "Datos enviados incompletos, se requiere un codigo para: " . $objeto->getDbTable(),
                     400,
                     []
@@ -151,6 +161,8 @@
                     echo json_encode( seteaMensaje(
                         $this->usuario->getDbTable(),
                         $num,
+                        "",
+                        "",
                         "Registros Encontrados.",
                         200,
                         $datosArray
@@ -159,6 +171,8 @@
                     echo json_encode( seteaMensaje(
                         $this->usuario->getDbTable(),
                         $num,
+                        "",
+                        "",
                         "No se encontraron registros con el correo: " . $correo,
                         404,
                         []
@@ -169,6 +183,8 @@
                 echo json_encode( seteaMensaje(
                     $this->usuario->getDbTable(),
                     $num,
+                    "",
+                    "",
                     "Datos enviados incompletos, se requiere un correo para: " . $objeto->getDbTable(),
                     400,
                     []
@@ -221,6 +237,8 @@
                         echo json_encode( seteaMensaje(
                             $this->usuario->getDbTable(),
                             0,
+                            "",
+                            "",
                             "Error en ingreso de credenciales.",
                             404,
                             []
@@ -231,6 +249,8 @@
                     echo json_encode( seteaMensaje(
                         $this->usuario->getDbTable(),
                         0,
+                        "",
+                        "",
                         "No existe este correo que ingresaste.",
                         404,
                         []
@@ -240,6 +260,8 @@
                 echo json_encode( seteaMensaje(
                     $this->usuario->getDbTable(),
                     0,
+                    "",
+                    "",
                     "Debes ingresar usuario y contraseña para procesar tu solicitud.",
                     404,
                     []
@@ -292,6 +314,8 @@
                         echo json_encode( seteaMensaje(
                             $this->usuario->getDbTable(),
                             1,
+                            "",
+                            "",
                             "Registro Almacenado.",
                             201,
                             []
@@ -302,7 +326,9 @@
                         echo json_encode( seteaMensaje(
                             $this->usuario->getDbTable(),
                             0,
-                            "Registro no almacenado.",
+                            "",
+                            "",
+                            "Consulta no se ejecuto.",
                             503,
                             []
                         ));
@@ -313,6 +339,8 @@
                     echo json_encode( seteaMensaje(
                         $this->usuario->getDbTable(),
                         0,
+                        "",
+                        "",
                         $exception->getMessage(),
                         422,
                         []
@@ -324,6 +352,8 @@
                 echo json_encode( seteaMensaje(
                     $this->usuario->getDbTable(),
                     0,
+                    "",
+                    "",
                     "Error faltan datos necesarios para procesar el registro.",
                     404,
                     []

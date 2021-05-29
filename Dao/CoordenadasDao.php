@@ -2,6 +2,7 @@
     include_once '../Config/Database.php';
     include_once '../Class/Coordenadas.php';
     include_once '../Config/Utilidades.php';
+    include_once '../Config/Constantes.php';
 
     header("Access-Control-Allow-Origin: *"); //Solo select
     header("Content-Type: application/json; charset=UTF-8"); //Solo select
@@ -24,6 +25,15 @@
         {
             $this->conn = $this->database->closeConnection();
             $this->coordenadas = null;
+        }
+
+        //****************************
+        // Obtiene todas las coordenadas por ruta
+        function getCantidadRegistros($query){
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $row["registros"];
         }
 
         //****************************
@@ -58,6 +68,8 @@
                 echo json_encode( seteaMensaje(
                     $this->coordenadas->getDbTable(),
                     $num,
+                    "",
+                    "",
                     "Registros Encontrados.",
                     200,
                     $datosArray
@@ -65,7 +77,9 @@
             }else{
                 echo json_encode( seteaMensaje(
                     $this->coordenadas->getDbTable(),
-                    $num,
+                    0,
+                    "",
+                    "",
                     "No se encontraron registros.",
                     404,
                     []
@@ -75,8 +89,35 @@
 
         //****************************
         // Obtiene todas las coordenadas por ruta
-        function getCoordenadasRuta($ruta = ""){
-            $query = "SELECT * FROM " . $this->coordenadas->getDbTable() . " WHERE Ruta = '". $ruta ."' ";
+        function getCoordenadasRuta($ruta = "", $limiteInicio = 0){
+            
+            $queryS = QUERY_SELECT_FROM . $this->coordenadas->getDbTable();
+            $queryW = QUERY_WHERE . " Ruta = '$ruta' ";
+            $queryO = QUERY_ORDERBY . " Fecha_original_de_la_transacción desc, secuencia_de_visita asc ";
+            $queryG = "";
+            $query = $queryS . $queryW . $queryO . $queryG;
+
+            //Para obtener el total de registros de la consulta
+            $cantidadRegistros = $this->getCantidadRegistros(QUERY_SELECT_FROM_COUNT . $this->coordenadas->getDbTable() . $queryW);
+
+            //Consulto los datos con limite.
+            //$query =          "SELECT * FROM " . $this->coordenadas->getDbTable();
+            //$query = $query . " WHERE Ruta = '". $ruta ."' ";
+            //$query = $query . " Order by Fecha_original_de_la_transacción desc, secuencia_de_visita asc ";
+            if(LIMITE){
+                $query = $query . " LIMIT " . $limiteInicio . " ," . LIMITE_REGISTROS;
+                if ($cantidadRegistros > $limiteInicio && $limiteInicio + LIMITE_REGISTROS < $cantidadRegistros){
+                    $urlNext = devuelveUrlServidor() . 
+                                devuelvePaginaSolicitadaSinDatosGet() . 
+                                "?offset=" . $limiteInicio + LIMITE_REGISTROS;
+                }
+                if ($limiteInicio != 0){
+                    $urlPrevios = devuelveUrlServidor() . 
+                                devuelvePaginaSolicitadaSinDatosGet() . 
+                                "?offset=" . $limiteInicio - LIMITE_REGISTROS;
+                }
+            }
+            
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $num = $stmt->rowCount();
@@ -87,24 +128,42 @@
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
                 {
                     extract($row);
-                    $dateItem=array(
-                        "fecha" => $Fecha_original_de_la_transacción,
-                        "ruta" => $Ruta,
-                        "secuencia" => $Secuencia_de_visita,
-                        "cliente" => $Código_de_cliente,
-                        "tipo_pedido" => $Tipo_de_pedido,
-                        "hora_inicio" => $Hora_de_inicio_de_visita,
-                        "hora_fin" => $Hora_de_Fin_de_visita,
-                        "tipo_transaccion" => $Tipo_de_transacción,
-                        "total" => $Total_del_documento,
-                        "latitud" => $coordenada_de_Latitud,
-                        "longitud" => $Coordenada_de_Longitud
-                    );
+                    if (FORMATO_LEGIBLE_JSON){
+                        $dateItem=array(
+                            "fecha" => $Fecha_original_de_la_transacción,
+                            "ruta" => $Ruta,
+                            "secuencia" => $Secuencia_de_visita,
+                            "cliente" => $Código_de_cliente,
+                            "tipo_pedido" => $Tipo_de_pedido,
+                            "hora_inicio" => $Hora_de_inicio_de_visita,
+                            "hora_fin" => $Hora_de_Fin_de_visita,
+                            "tipo_transaccion" => $Tipo_de_transacción,
+                            "total" => $Total_del_documento,
+                            "latitud" => $coordenada_de_Latitud,
+                            "longitud" => $Coordenada_de_Longitud
+                        );
+                    }else{    
+                        $dateItem=array(
+                            $Fecha_original_de_la_transacción,
+                            $Ruta,
+                            $Secuencia_de_visita,
+                            $Código_de_cliente,
+                            $Tipo_de_pedido,
+                            $Hora_de_inicio_de_visita,
+                            $Hora_de_Fin_de_visita,
+                            $Tipo_de_transacción,
+                            $Total_del_documento,
+                            $coordenada_de_Latitud,
+                            $Coordenada_de_Longitud
+                        );
+                    }
                     array_push($datosArray["datos"], $dateItem);
                 }
                 echo json_encode( seteaMensaje(
                     $this->coordenadas->getDbTable(),
-                    $num,
+                    $cantidadRegistros,
+                    $urlNext,
+                    $urlPrevios,
                     "Registros Encontrados.",
                     200,
                     $datosArray
@@ -112,7 +171,9 @@
             }else{
                 echo json_encode( seteaMensaje(
                     $this->coordenadas->getDbTable(),
-                    $num,
+                    0,
+                    "",
+                    "",
                     "No se encontraron registros.",
                     404,
                     []
