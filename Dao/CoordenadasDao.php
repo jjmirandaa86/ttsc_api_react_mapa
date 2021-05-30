@@ -37,57 +37,6 @@
         }
 
         //****************************
-        // Obtiene todas los coordenadas
-        function getAllCoordenadas(){
-            $query = "SELECT * FROM " . $this->coordenadas->getDbTable(); 
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            $num = $stmt->rowCount();
-            if($num>0)
-            {
-                $datosArray=array();
-                $datosArray["datos"]=array();
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-                {
-                    extract($row);
-                    $dateItem=array(
-                        "fecha" => $Fecha_original_de_la_transacción,
-                        "ruta" => $Ruta,
-                        "secuencia" => $Secuencia_de_visita,
-                        "cliente" => $Código_de_cliente,
-                        "tipo_pedido" => $Tipo_de_pedido,
-                        "hora_inicio" => $Hora_de_inicio_de_visita,
-                        "hora_fin" => $Hora_de_Fin_de_visita,
-                        "tipo_transaccion" => $Tipo_de_transacción,
-                        "total" => $Total_del_documento,
-                        "latitud" => $coordenada_de_Latitud,
-                        "longitud" => $Coordenada_de_Longitud
-                    );
-                    array_push($datosArray["datos"], $dateItem);
-                }
-                echo json_encode( seteaMensaje(
-                    $this->coordenadas->getDbTable(),
-                    $num,
-                    "",
-                    "",
-                    "Registros Encontrados.",
-                    200,
-                    $datosArray
-                ));
-            }else{
-                echo json_encode( seteaMensaje(
-                    $this->coordenadas->getDbTable(),
-                    0,
-                    "",
-                    "",
-                    "No se encontraron registros.",
-                    404,
-                    []
-                ));
-            }
-        }
-
-        //****************************
         // Obtiene todas las coordenadas por ruta
         function getCoordenadasRuta($ruta = "", $limiteInicio = 0){
             $queryS = QUERY_SELECT_FROM . $this->coordenadas->getDbTable();

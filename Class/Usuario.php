@@ -20,7 +20,12 @@ class Usuario {
     //******************************* */
     //*********** Constructor ***********
     //******************************* */
-    function __construct($idUsuario = 0, $nombre = "", $apellido = "", $contrasena = "", $correo = "", $estado = "") {
+    function __construct($idUsuario = 0, 
+                            $nombre = "", 
+                            $apellido = "", 
+                            $contrasena = "", 
+                            $correo = "", 
+                            $estado = "") {
         $this->dbTable = $this->dbTable;
         $this->idUsuario = $idUsuario;
         $this->nombre = $nombre;

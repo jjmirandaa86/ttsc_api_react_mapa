@@ -1,7 +1,6 @@
 <?php
     //****************************************** 
     //Para devolver el formato de la respuesta
-    //****************************************** 
     function devuelveFormateado($tipoRespuesta, $datosRecibidos){
         if($tipoRespuesta=="JSON"){
             $datosDevueltos = json_encode($datosRecibidos);
@@ -100,7 +99,10 @@
         }
     }
 
-
+    //****************************************** 
+    //setea el mensaje que se envia al usuario 
+    //CASE MENSAJE_URL_NEXT_PREVIOS es para envio de respuesta con paginas de anterior y siguiente
+    //DEFAULT No se envia este datos de paginas al cliente
     function seteaMensaje($tipo, $clase, $cantidad, $urlNext = "", $urlPrevios = "", $mensaje, $codigoHttp, $registros){
         switch($tipo)
         {
@@ -131,18 +133,26 @@
         return $respuesta;
     }
 
-    function devuelveTipoPeticion(){ //GET | POST | PUT | DELETE
+    //****************************************** 
+    //Devuelve el metodo solicitado por el usuario GET | POST | PUT | DELETE
+    function devuelveTipoPeticion(){ 
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
 
+    //****************************************** 
+    //Devuelve el Servidor que se esta accediendo con el puerto.
     function devuelveUrlServidor(){ // localhost:8888
         return strtolower($_SERVER['HTTP_HOST']);
     }
 
+    //****************************************** 
+    //Devuelve la pagina que solicito el usuario
     function devuelvePaginaSolicitada(){ //   /reactmapa/api/usuario.php
         return strtolower($_SERVER['REQUEST_URI']); 
     }
 
+    //****************************************** 
+    //Descompone la pagina solicitada y guarda los parametros para enviar a dicha solicitud
     function devuelveDatoUrl($urlPage){
         
         $urlPageArray = explode("/", $urlPage);
@@ -181,7 +191,7 @@
             if(strpos($dato, "=")>0){
                 $dato = substr($dato, 0, strpos($dato, "="));
             }
-            $valorUrl = devuelveUrlServidor() . $dato . "?=" . $valorUrl;
+            $valorUrl = devuelveUrlServidor() . $dato . "=" . $valorUrl;
         }else{
             $valorUrl = devuelveUrlServidor() . devuelvePaginaSolicitada() . "?offset=" . $valorUrl;
         }

@@ -19,10 +19,6 @@
             
             switch($accesoMetodo)
             {
-                case "coordenadas/all/get": //Recupera todos los coordenadas
-                    $datos = $this->coordenadasDao->getAllCoordenadas();
-                    break;
-
                 case "coordenadas/ruta/get": //Recupera las coordenadas por ruta 
                     if ($parametroUrlDato === 0){
                         $datos = $this->coordenadasDao->getCoordenadasRuta($dato);
@@ -41,9 +37,11 @@
                     break;
 
                 default:
-                    echo json_encode( seteaMensaje(
+                    echo json_encode( seteaMensaje("",
                         "Error, no existe el metodo buscado",
                         0,
+                        "",
+                        "",
                         "Metodo no implementado.",
                         404,
                         []

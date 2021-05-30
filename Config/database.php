@@ -3,10 +3,8 @@
     
     class Database {
         public $conn;
-
-        //******************************* */
+        //*******************************
         //Genera la conexión de la BD
-        //******************************* */
         public function getConnection(){
             $this->conn = null;
             try{
@@ -21,9 +19,8 @@
             return $this->conn;
         }
 
-        //******************************* */
+        //******************************* 
         //Cierra la conexión de la BD || Libera recursos
-        //******************************* */
         public function closeConnection(){
             $this->conn = null;
         }

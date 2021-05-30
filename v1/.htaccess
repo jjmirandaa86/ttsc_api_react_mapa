@@ -14,7 +14,6 @@
 
     #************************
     #******** Coordenadas *******
-    #RewriteRule ^coordenadas/all$ Coordenadas.php [NC,L]
     RewriteRule ^coordenadas/ruta/([0-9]+)$ Coordenadas.php [NC,L]
 
 

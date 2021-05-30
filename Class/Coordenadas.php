@@ -25,8 +25,17 @@ class Coordenadas {
     //******************************* */
     //*********** Constructor ***********
     //******************************* */
-    function __construct($fecha = "", $ruta = "", $secuencia = "", $cliente = "", $tipo_pedido = "", $hora_inicio = "",
-                            $hora_fin = "", $tipo_transaccion = "", $total = "", $latitud = "", $longitud = "") {
+    function __construct($fecha = "", 
+                        $ruta = "", 
+                        $secuencia = "", 
+                        $cliente = "", 
+                        $tipo_pedido = "", 
+                        $hora_inicio = "",
+                        $hora_fin = "", 
+                        $tipo_transaccion = "", 
+                        $total = "", 
+                        $latitud = "", 
+                        $longitud = "") {
         $this->dbTable = $this->dbTable;
         $this->fecha = $fecha;
         $this->ruta = $ruta;

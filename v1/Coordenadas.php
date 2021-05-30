@@ -36,9 +36,11 @@
                 $datos = $coordenadasBo->consultaBo($entidad, $metodo, $dato, $metodoServidor);
                 break;
             default:
-            echo json_encode( seteaMensaje(
+            echo json_encode( seteaMensaje("",
                 "Error, no existe el metodo buscado",
                 0,
+                "",
+                "",
                 "Metodo no implementado.",
                 404,
                 []
@@ -46,9 +48,11 @@
             break;
         }
     }else{
-        echo json_encode( seteaMensaje(
+        echo json_encode( seteaMensaje("",
             "Error, se esperan parametros",
             0,
+            "",
+            "",
             "Se esperan parametros.",
             404,
             [] 
