@@ -101,17 +101,33 @@
     }
 
 
-    function seteaMensaje($clase, $cantidad, $urlNext, $urlPrevios, $mensaje, $codigoHttp, $registros){
-        $respuesta = array(  
-            "Clase" => $clase, 
-            "Cantidad" => $cantidad,
-            "urlSiguiente" => $urlNext,
-            "urlAnterior" => $urlPrevios,
-            "mensaje" => $mensaje,
-            "codigoHttp" => $codigoHttp,
-            "mensajeHttp" => codigoErrorHttp($codigoHttp),
-            "registros" => $registros
-        );
+    function seteaMensaje($tipo, $clase, $cantidad, $urlNext = "", $urlPrevios = "", $mensaje, $codigoHttp, $registros){
+        switch($tipo)
+        {
+            case "MENSAJE_URL_NEXT_PREVIOS": 
+                $respuesta = array(  
+                    "Clase" => $clase, 
+                    "Cantidad" => $cantidad,
+                    "urlSiguiente" => $urlNext,
+                    "urlAnterior" => $urlPrevios,
+                    "mensaje" => $mensaje,
+                    "codigoHttp" => $codigoHttp,
+                    "mensajeHttp" => codigoErrorHttp($codigoHttp),
+                    "registros" => $registros
+                );
+                break;
+
+            default:
+                $respuesta = array(  
+                    "Clase" => $clase, 
+                    "Cantidad" => $cantidad,
+                    "mensaje" => $mensaje,
+                    "codigoHttp" => $codigoHttp,
+                    "mensajeHttp" => codigoErrorHttp($codigoHttp),
+                    "registros" => $registros
+                );
+                break;
+        }
         return $respuesta;
     }
 
@@ -127,12 +143,6 @@
         return strtolower($_SERVER['REQUEST_URI']); 
     }
 
-    function devuelvePaginaSolicitadaSinDatosGet(){ //   /reactmapa/api/usuario.php?offset=20
-        $dato = strtolower($_SERVER['REQUEST_URI']); //   /reactmapa/api/usuario.php
-        $dato = substr($dato, 0,strpos($dato, "?"));
-        return $dato; 
-    }
-
     function devuelveDatoUrl($urlPage){
         
         $urlPageArray = explode("/", $urlPage);
@@ -145,6 +155,9 @@
         $parametroUrlDato = 0;
         if(strpos($dato, "=")>0){
             $parametroUrlDato = intval(substr($dato, strpos($dato, "=")+1, 100));
+            if ($parametroUrlDato < 0){
+                $parametroUrlDato = 0;
+            }
             $dato = substr($dato, 0, strpos($dato, "="));
         }
         //echo $parametroUrlDato . "\n";
@@ -157,6 +170,44 @@
         //echo $dato;
         
         return [$entidad, $metodo, $dato, $parametroUrl, $parametroUrlDato];
-        
     }
+
+    
+    //****************************************** 
+    //Mostrar Mensaje la Url de la Pagina 
+    function devuelvePaginaSolicitadaSinDatosGet($valorUrl){ 
+        if (strpos(devuelvePaginaSolicitada(), "?")){
+            $dato = devuelvePaginaSolicitada();
+            if(strpos($dato, "=")>0){
+                $dato = substr($dato, 0, strpos($dato, "="));
+            }
+            $valorUrl = devuelveUrlServidor() . $dato . "?=" . $valorUrl;
+        }else{
+            $valorUrl = devuelveUrlServidor() . devuelvePaginaSolicitada() . "?offset=" . $valorUrl;
+        }
+        return $valorUrl; 
+    }
+
+    //****************************************** 
+    //Mostrar Mensaje de pagina siguiente 
+    function devuelveUrlSiguiente($limite_resgistros, $limiteInicio, $cantidadTotalRegistros){
+        $urlNext = null;
+        if ($cantidadTotalRegistros > $limiteInicio &&                     
+            $limiteInicio + $limite_resgistros < $cantidadTotalRegistros){  
+            $urlNext = devuelvePaginaSolicitadaSinDatosGet($limiteInicio + $limite_resgistros);
+        }
+        return $urlNext;
+    }
+
+    //****************************************** 
+    //Mostrar Mensaje de pagina anterior 
+    function devuelveUrlAnterior($limite_resgistros, $limiteInicio){
+        $urlPrevios = null;
+        if ($limiteInicio != 0){  
+            $urlPrevios = devuelvePaginaSolicitadaSinDatosGet($limiteInicio - $limite_resgistros);
+        }
+        return $urlPrevios;
+    }
+    
+
 ?>

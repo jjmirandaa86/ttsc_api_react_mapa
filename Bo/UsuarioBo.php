@@ -47,9 +47,11 @@
                     break;
 
                 default:
-                    echo json_encode( seteaMensaje(
+                    echo json_encode( seteaMensaje("",
                         "Error, no existe el metodo buscado",
                         0,
+                        "",
+                        "",
                         "Metodo no implementado.",
                         404,
                         []

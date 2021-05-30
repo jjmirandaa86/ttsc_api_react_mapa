@@ -1,6 +1,6 @@
 <?php
     define ('LIMITE', true);
-    define ('LIMITE_REGISTROS', 1000);
+    define ('LIMITE_REGISTROS', 2);
     define ('FORMATO_LEGIBLE_JSON', true);
     
     //Sentencias DML
@@ -10,4 +10,5 @@
     define ('QUERY_ORDERBY', ' Order by ');
     define ('QUERY_LIMIT', ' Limit ');
     
+    //
 ?>

@@ -52,7 +52,7 @@
                     );
                     array_push($datosArray["datos"], $dateItem);
                 }
-                echo json_encode( seteaMensaje(
+                echo json_encode( seteaMensaje("",
                     $this->usuario->getDbTable(),
                     $num,
                     "",
@@ -62,7 +62,7 @@
                     $datosArray
                 ));
             }else{
-                echo json_encode( seteaMensaje(
+                echo json_encode( seteaMensaje("",
                     $this->usuario->getDbTable(),
                     $num,
                     "",
@@ -99,7 +99,7 @@
                         );
                         array_push($datosArray["datos"], $dateItem);
                     }
-                    echo json_encode( seteaMensaje(
+                    echo json_encode( seteaMensaje("",
                         $this->usuario->getDbTable(),
                         $num,
                         "",
@@ -109,7 +109,7 @@
                         $datosArray
                     ));
                 }else{
-                    echo json_encode( seteaMensaje(
+                    echo json_encode( seteaMensaje("",
                         $this->usuario->getDbTable(),
                         $num,
                         "",
@@ -121,7 +121,7 @@
                 }
             }else{
                 //RESPUESTA - Parametros enviados vacios.
-                echo json_encode( seteaMensaje(
+                echo json_encode( seteaMensaje("",
                     $this->usuario->getDbTable(),
                     0,
                     "",
@@ -158,7 +158,7 @@
                         );
                         array_push($datosArray["datos"], $dateItem);
                     }
-                    echo json_encode( seteaMensaje(
+                    echo json_encode( seteaMensaje("",
                         $this->usuario->getDbTable(),
                         $num,
                         "",
@@ -168,7 +168,7 @@
                         $datosArray
                     ));
                 }else{
-                    echo json_encode( seteaMensaje(
+                    echo json_encode( seteaMensaje("",
                         $this->usuario->getDbTable(),
                         $num,
                         "",
@@ -180,7 +180,7 @@
                 }
             }else{
                 //RESPUESTA - Parametros enviados vacios.
-                echo json_encode( seteaMensaje(
+                echo json_encode( seteaMensaje("",
                     $this->usuario->getDbTable(),
                     $num,
                     "",
@@ -226,15 +226,17 @@
                     //Valido el hash con la clave que ingreso.
                     $validaHash = $this->classContrasena->verify($clave, $datosArray["datos"][0]["contrasena"]);
                     if ($validaHash){
-                        echo json_encode( seteaMensaje(
+                        echo json_encode( seteaMensaje("",
                             $this->usuario->getDbTable(),
                             $num,
+                            "",
+                            "",
                             "Registros Encontrados.",
                             200,
                             $datosArray
                         ));
                     }else{
-                        echo json_encode( seteaMensaje(
+                        echo json_encode( seteaMensaje("",
                             $this->usuario->getDbTable(),
                             0,
                             "",
@@ -246,7 +248,7 @@
                     }
                     //
                 }else{
-                    echo json_encode( seteaMensaje(
+                    echo json_encode( seteaMensaje("",
                         $this->usuario->getDbTable(),
                         0,
                         "",
@@ -257,7 +259,7 @@
                     ));
                 }
             }else{
-                echo json_encode( seteaMensaje(
+                echo json_encode( seteaMensaje("",
                     $this->usuario->getDbTable(),
                     0,
                     "",
@@ -311,7 +313,7 @@
                 try{
                     if($stmt->execute()){
                         //RESPUESTA - CREACION CON EXITO
-                        echo json_encode( seteaMensaje(
+                        echo json_encode( seteaMensaje("",
                             $this->usuario->getDbTable(),
                             1,
                             "",
@@ -323,7 +325,7 @@
                         return true;
                     }else{
                         //RESPUESTA - ERROR AL EJECUTAR LA CONSULTA
-                        echo json_encode( seteaMensaje(
+                        echo json_encode( seteaMensaje("",
                             $this->usuario->getDbTable(),
                             0,
                             "",
@@ -336,7 +338,7 @@
                     }
                 }catch(PDOException $exception){
                     //RESPUESTA - ERROR CAPTURADO EN EXCEPCION
-                    echo json_encode( seteaMensaje(
+                    echo json_encode( seteaMensaje("",
                         $this->usuario->getDbTable(),
                         0,
                         "",
@@ -349,7 +351,7 @@
                 }
             }else
             {
-                echo json_encode( seteaMensaje(
+                echo json_encode( seteaMensaje("",
                     $this->usuario->getDbTable(),
                     0,
                     "",

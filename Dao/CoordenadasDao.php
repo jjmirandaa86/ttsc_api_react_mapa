@@ -90,34 +90,23 @@
         //****************************
         // Obtiene todas las coordenadas por ruta
         function getCoordenadasRuta($ruta = "", $limiteInicio = 0){
-            
             $queryS = QUERY_SELECT_FROM . $this->coordenadas->getDbTable();
             $queryW = QUERY_WHERE . " Ruta = '$ruta' ";
             $queryO = QUERY_ORDERBY . " Fecha_original_de_la_transacción desc, secuencia_de_visita asc ";
             $queryG = "";
-            $query = $queryS . $queryW . $queryO . $queryG;
+            $queryL = "";
 
             //Para obtener el total de registros de la consulta
             $cantidadRegistros = $this->getCantidadRegistros(QUERY_SELECT_FROM_COUNT . $this->coordenadas->getDbTable() . $queryW);
-
-            //Consulto los datos con limite.
-            //$query =          "SELECT * FROM " . $this->coordenadas->getDbTable();
-            //$query = $query . " WHERE Ruta = '". $ruta ."' ";
-            //$query = $query . " Order by Fecha_original_de_la_transacción desc, secuencia_de_visita asc ";
+            $urlNext = null;
+            $urlPrevios = null;
             if(LIMITE){
-                $query = $query . " LIMIT " . $limiteInicio . " ," . LIMITE_REGISTROS;
-                if ($cantidadRegistros > $limiteInicio && $limiteInicio + LIMITE_REGISTROS < $cantidadRegistros){
-                    $urlNext = devuelveUrlServidor() . 
-                                devuelvePaginaSolicitadaSinDatosGet() . 
-                                "?offset=" . $limiteInicio + LIMITE_REGISTROS;
-                }
-                if ($limiteInicio != 0){
-                    $urlPrevios = devuelveUrlServidor() . 
-                                devuelvePaginaSolicitadaSinDatosGet() . 
-                                "?offset=" . $limiteInicio - LIMITE_REGISTROS;
-                }
+                $queryL = QUERY_LIMIT . $limiteInicio . " ," . LIMITE_REGISTROS;
+                $urlNext = devuelveUrlSiguiente(LIMITE_REGISTROS, $limiteInicio, $cantidadRegistros);
+                $urlPrevios = devuelveUrlAnterior(LIMITE_REGISTROS, $limiteInicio);
             }
-            
+
+            $query = $queryS . $queryW . $queryO . $queryG . $queryL;
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $num = $stmt->rowCount();
@@ -159,7 +148,7 @@
                     }
                     array_push($datosArray["datos"], $dateItem);
                 }
-                echo json_encode( seteaMensaje(
+                echo json_encode( seteaMensaje("MENSAJE_URL_NEXT_PREVIOS",
                     $this->coordenadas->getDbTable(),
                     $cantidadRegistros,
                     $urlNext,
@@ -169,7 +158,7 @@
                     $datosArray
                 ));
             }else{
-                echo json_encode( seteaMensaje(
+                echo json_encode( seteaMensaje("",
                     $this->coordenadas->getDbTable(),
                     0,
                     "",

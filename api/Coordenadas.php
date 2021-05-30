@@ -16,14 +16,14 @@
     $parametroUrl = ""; 
     $parametroUrlDato = "";
     $userBo = null;
-
+    
     //Obtengo URL de la petición
     $metodoServidor = devuelveTipoPeticion();   //   GET | POST | DEL | PUT
     $urlPage = devuelvePaginaSolicitada();      //   /reactmapa/api/usuario.php
     [$entidad, $metodo, $dato, $parametroUrl, $parametroUrlDato] = devuelveDatoUrl($urlPage);
-    devuelvePaginaSolicitadaSinDatosGet();
     
     if(!empty($entidad) && !empty($metodo)){
+    
         $coordenadasBo = new CoordenadasBo();
         switch($metodoServidor)
         {
