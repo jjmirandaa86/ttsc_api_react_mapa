@@ -103,15 +103,28 @@
     //setea el mensaje que se envia al usuario 
     //CASE MENSAJE_URL_NEXT_PREVIOS es para envio de respuesta con paginas de anterior y siguiente
     //DEFAULT No se envia este datos de paginas al cliente
-    function seteaMensaje($tipo, $clase, $cantidad, $urlNext = "", $urlPrevios = "", $mensaje, $codigoHttp, $registros){
+    function seteaMensaje($tipo, $clase, $cantidad, $comodin1 = "", $comodin2 = "", $mensaje, $codigoHttp, $registros){
         switch($tipo)
         {
             case "MENSAJE_URL_NEXT_PREVIOS": 
                 $respuesta = array(  
                     "Clase" => $clase, 
                     "Cantidad" => $cantidad,
-                    "urlSiguiente" => $urlNext,
-                    "urlAnterior" => $urlPrevios,
+                    "urlSiguiente" => $comodin1,
+                    "urlAnterior" => $comodin2,
+                    "mensaje" => $mensaje,
+                    "codigoHttp" => $codigoHttp,
+                    "mensajeHttp" => codigoErrorHttp($codigoHttp),
+                    "registros" => $registros
+                );
+                break;
+
+            case "MENSAJE_GRAFICO": 
+                $respuesta = array(  
+                    "Clase" => $clase, 
+                    "Cantidad" => $cantidad,
+                    "Minimo" => $comodin1,
+                    "Maximo" => $comodin2,
                     "mensaje" => $mensaje,
                     "codigoHttp" => $codigoHttp,
                     "mensajeHttp" => codigoErrorHttp($codigoHttp),

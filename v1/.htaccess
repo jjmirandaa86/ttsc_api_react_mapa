@@ -15,6 +15,7 @@
     #************************
     #******** Coordenadas *******
     RewriteRule ^coordenadas/ruta/([0-9]+)$ Coordenadas.php [NC,L]
+    RewriteRule ^coordenadas/grafico/([0-9]+)$ Coordenadas.php [NC,L]
 
 
     #negar lectura de acchivo desde la web

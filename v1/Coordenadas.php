@@ -7,6 +7,7 @@
     //===========================================================================================================
     //coordenadas/all     	    coordenadas    all         -                                       GET 	    JSON
     //coordenadas/ruta/{ruta}   coordenadas    ruta        501101                                  GET 	    JSON
+    //coordenadas/grafico/{ruta}coordenadas    grafico     501101                                  GET 	    JSON
     //coordenadas/fecha     	coordenadas    fecha       {inicio, fin}                           POST     JSON
     //coordenadas/fecharuta 	coordenadas    fecharuta   {inicio, fin, [ruta]}                   POST     JSON
     
@@ -23,7 +24,7 @@
     [$entidad, $metodo, $dato, $parametroUrl, $parametroUrlDato] = devuelveDatoUrl($urlPage);
     
     if(!empty($entidad) && !empty($metodo)){
-    
+        
         $coordenadasBo = new CoordenadasBo();
         switch($metodoServidor)
         {

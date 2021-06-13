@@ -16,7 +16,6 @@
         //Derivo al metodo correspondiente
         function consultaBo($entidad = "", $metodo = "", $dato = "", $metodoServidor = "", $parametroUrl = "", $parametroUrlDato = 0 ){
             $accesoMetodo = $entidad . "/" . $metodo . "/" . $metodoServidor;
-            
             switch($accesoMetodo)
             {
                 case "coordenadas/ruta/get": //Recupera las coordenadas por ruta 
@@ -26,6 +25,10 @@
                     else{ 
                         $datos = $this->coordenadasDao->getCoordenadasRuta($dato, $parametroUrlDato);
                     }
+                    break;
+                    
+                case "coordenadas/grafico/get": //Recupera los datos para el grafico
+                    $datos = $this->coordenadasDao->getTotalValorizadoDiaXRuta($dato);
                     break;
 
                 case "coordenadas/fecha/post": //recupero los datos por fecha inicio y fin

@@ -41,8 +41,8 @@
         function getCoordenadasRuta($ruta = "", $limiteInicio = 0){
             $queryS = QUERY_SELECT_FROM . $this->coordenadas->getDbTable();
             $queryW = QUERY_WHERE . " Ruta = '$ruta' ";
-            $queryO = QUERY_ORDERBY . " Fecha_original_de_la_transacción desc, secuencia_de_visita asc ";
             $queryG = "";
+            $queryO = QUERY_ORDERBY . " Fecha_original_de_la_transacción desc, secuencia_de_visita asc ";
             $queryL = "";
 
             //Para obtener el total de registros de la consulta
@@ -55,7 +55,7 @@
                 $urlPrevios = devuelveUrlAnterior(LIMITE_REGISTROS, $limiteInicio);
             }
 
-            $query = $queryS . $queryW . $queryO . $queryG . $queryL;
+            $query = $queryS . $queryW . $queryG . $queryO . $queryL;
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $num = $stmt->rowCount();
@@ -108,6 +108,77 @@
                 ));
             }else{
                 echo json_encode( seteaMensaje("",
+                    $this->coordenadas->getDbTable(),
+                    0,
+                    "",
+                    "",
+                    "No se encontraron registros.",
+                    404,
+                    []
+                ));
+            }
+        }
+
+        //****************************
+        // Obtiene Totales Dolares por dias consultados
+        function getTotalValorizadoDiaXRuta($ruta = ""){
+            $queryS = QUERY_SELECT . " Fecha_original_de_la_transacción, ruta, sum(Total_del_documento) as Total " . QUERY_FROM . $this->coordenadas->getDbTable();
+            $queryW = QUERY_WHERE . " Ruta = '$ruta' ";
+            $queryG = QUERY_GROUPBY . " Fecha_original_de_la_transacción, ruta ";
+            $queryO = QUERY_ORDERBY . " Fecha_original_de_la_transacción desc ";
+            $queryL = "";
+        
+            $query = $queryS . $queryW . $queryG . $queryO . $queryL;
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $num = $stmt->rowCount();
+            if($num>0)
+            {
+                $datosArray=array();
+                $datosArray["datos"]=array();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+                {
+                    extract($row);
+                    $valortotal = round(floatval($Total), 2);
+                    if (FORMATO_LEGIBLE_JSON){
+                        $dateItem=array(
+                            "fecha" => $Fecha_original_de_la_transacción,
+                            //"ruta" => $ruta,
+                            "valortotal" => $valortotal
+                        );
+                        
+                    }else{    
+                        $dateItem=array(
+                            $Fecha_original_de_la_transacción,
+                            //$ruta,
+                            $valortotal
+                        );
+                    }
+                   
+                    array_push($datosArray["datos"], $dateItem);
+                }
+
+                //FALTA DESARROLLLAR
+                //FALTA DESARROLLLAR
+                //FALTA DESARROLLLAR
+                //FALTA DESARROLLLAR
+
+                //Minimo
+                $valorMinimo = 500;
+                //Maximo 
+                $valorMaximo = 3000;
+
+                echo json_encode( seteaMensaje("MENSAJE_GRAFICO",
+                    $this->coordenadas->getDbTable(),
+                    $num,
+                    $valorMinimo,
+                    $valorMaximo,
+                    "Registros Encontrados.",
+                    200,
+                    $datosArray
+                ));
+            }else{
+                echo json_encode( seteaMensaje("MENSAJE_GRAFICO",
                     $this->coordenadas->getDbTable(),
                     0,
                     "",
